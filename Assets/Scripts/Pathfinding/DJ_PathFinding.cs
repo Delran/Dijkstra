@@ -47,10 +47,13 @@ public class DJ_PathFinding : MonoBehaviour
     void Update()
     {
         timer += Time.deltaTime;
-        if (timer > tick )
+        if (grid._nodes[target].Enabled)
         {
-            timer = 0;
-            UpdatePathFinding();
+            if (timer > tick )
+            {
+                timer = 0;
+                UpdatePathFinding();
+            }
         }
     }
 
