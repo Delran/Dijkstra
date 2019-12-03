@@ -11,7 +11,7 @@ public class TBG_DijkstraTest : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        grid = new DJ_Grid(5, 5);
+        /*grid = new DJ_Grid(5, 5);
 
 
         System.Diagnostics.Stopwatch _clock = new System.Diagnostics.Stopwatch();
@@ -31,7 +31,7 @@ public class TBG_DijkstraTest : MonoBehaviour
         Debug.Log($"{ts} -- Dijkstra time");
 
         path = _dijkstra.Path;
-        Debug.Log(path.elements);
+        Debug.Log(path.elements);*/
     }
 
     private void OnDrawGizmos()

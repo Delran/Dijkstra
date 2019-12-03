@@ -1,12 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class DJ_Grid
 {
     public TBG_StretchyBuffer<DJ_Node> _nodes { get; private set; } = new TBG_StretchyBuffer<DJ_Node>();
     
-    public DJ_Grid(int _length, int _depth)
+    public DJ_Grid(int _length, int _depth, Transform _container)
     {
         for (int y = 0; y < _depth+1; y++)
         {
@@ -21,8 +22,19 @@ public class DJ_Grid
                 if (y != 0)
                 {
                     _neighbours.Add(_nodes[(x) + (y - 1) * (_depth+1)]);
+                    if (x != _depth)
+                    {
+                        _neighbours.Add(_nodes[(x + 1) + (y - 1) * (_depth + 1)]);
+                    }
+                    if (x != 0)
+                    {
+                        _neighbours.Add(_nodes[(x - 1) + (y - 1) * (_depth + 1)]);
+                    }
                 }
-                DJ_Node _node = new DJ_Node(new Vector3(x, 0, y), _neighbours, x + _yIndex);
+                GameObject _nodeObject = new GameObject();
+                DJ_Node _node = _nodeObject.AddComponent<DJ_Node>();
+                if (_container) _node.transform.parent = _container;
+                _node .Init(new Vector3(x, 0, y), _neighbours, x + _yIndex);
                 if (x != 0)
                 {
                     _nodes[(x - 1) + _yIndex].AddNeighbor(_node);
@@ -30,6 +42,14 @@ public class DJ_Grid
                 if (y != 0)
                 {
                     _nodes[(x) + (y - 1) * (_depth+1)].AddNeighbor(_node);
+                    if (x != _depth)
+                    {
+                        _nodes[(x + 1) + (y - 1) * (_depth + 1)].AddNeighbor(_node);
+                    }
+                    if (x != 0)
+                    {
+                        _nodes[(x - 1) + (y - 1) * (_depth + 1)].AddNeighbor(_node);
+                    }
                 }
                 _nodes.Add(_node);
             }
