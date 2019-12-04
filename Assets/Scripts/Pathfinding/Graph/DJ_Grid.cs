@@ -5,7 +5,7 @@ using System;
 
 public class DJ_Grid
 {
-    public TBG_StretchyBuffer<DJ_Node> _nodes { get; private set; } = new TBG_StretchyBuffer<DJ_Node>();
+    public List<DJ_Node> _nodes { get; private set; } = new List<DJ_Node>();
     
     public DJ_Grid(int _length, int _depth, Transform _container)
     {
@@ -14,7 +14,7 @@ public class DJ_Grid
             int _yIndex = y * (_depth+1);
             for (int x = 0; x < _length+1; x++)
             {
-                TBG_StretchyBuffer<DJ_Node> _neighbours = new TBG_StretchyBuffer<DJ_Node>();
+                List<DJ_Node> _neighbours = new List<DJ_Node>();
                 if (x!=0)
                 {
                     _neighbours.Add(_nodes[(x - 1) + _yIndex]);
@@ -34,7 +34,7 @@ public class DJ_Grid
                 GameObject _nodeObject = new GameObject();
                 DJ_Node _node = _nodeObject.AddComponent<DJ_Node>();
                 if (_container) _node.transform.parent = _container;
-                _node .Init(new Vector3(x, 0, y), _neighbours, x + _yIndex);
+                _node.Init(new Vector3(x, 0, y), _neighbours, x + _yIndex);
                 if (x != 0)
                 {
                     _nodes[(x - 1) + _yIndex].AddNeighbor(_node);

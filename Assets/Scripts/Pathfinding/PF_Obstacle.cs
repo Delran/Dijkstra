@@ -4,68 +4,57 @@ using UnityEngine;
 
 public class PF_Obstacle : MonoBehaviour
 {
-    [SerializeField, Header("Box Collider")] DJ_PathFinding path = null;
+    [SerializeField, Header("Path Finder")] DJ_PathFinding path = null;
 
-    [SerializeField, Header("Box Collider")] BoxCollider boxCollider = null;
-
-    TBG_StretchyBuffer<DJ_Node> nodes => path.Grid._nodes;
-
-    List<Vector3> Corners = new List<Vector3>();
+    List<DJ_Node> nodes => path.Grid._nodes;
+    Dictionary<int, DJ_Node> visited = new Dictionary<int, DJ_Node>();
 
     Vector3 _position = Vector3.zero;
-    Vector3 _obstaclePosition = Vector3.zero;
 
     private void Start()
     {
-        boxCollider = gameObject.GetComponent<BoxCollider>();
         if (!path) return;
     }
 
     private void UpdateNodes()
     {
-        if (nodes == null) return;
-        for (int i = 0; i < nodes.elements; i++)
+        if (path.Grid == null)
         {
-            Corners.Clear();
+            return;
+        }
+        for (int i = 0; i < nodes.Count; i++)
+        {
             DJ_Node _node = nodes[i];
-            //Vector3 _position = transform.InverseTransformPoint( _node.Position );
             _position = transform.InverseTransformPoint(_node.Position);
             float _nodeX = _position.x, _nodeY = _position.y, _nodeZ = _position.z;
-            //Vector3 _obstaclePosition = transform.position;
-            _obstaclePosition = transform.position;
 
-            _nodeX = _nodeX < 0 ? _nodeX += 0.1f : _nodeX -= 0.1f;
-            _nodeY = _nodeY < 0 ? _nodeY += 0.1f : _nodeY -= 0.1f;
-            _nodeZ = _nodeZ < 0 ? _nodeZ += 0.1f : _nodeZ -= 0.1f;
-
-            //Debug.Log(boxCollider.size);
-
-            /*Vector3 _upLeft = _obstaclePosition + Vector3.forward * gameObject.transform.localScale.z / 2 + Vector3.left * gameObject.transform.localScale.x / 2;
-            Vector3 _upRight = _obstaclePosition + Vector3.forward * gameObject.transform.localScale.z / 2 + Vector3.right * gameObject.transform.localScale.x / 2;
-            Vector3 _downLeft = _obstaclePosition + Vector3.back * gameObject.transform.localScale.z / 2 + Vector3.left * gameObject.transform.localScale.x / 2;
-            Vector3 _downRight = _obstaclePosition + Vector3.back * gameObject.transform.localScale.z / 2 + Vector3.right * gameObject.transform.localScale.x / 2;*/
-
-            //float _halfX = _obstaclePosition.x
+            float _scale = 0.5f;
+            float _scaleX = _scale * (1 / transform.localScale.x);
+            float _scaleY = _scale * (1 / transform.localScale.y);
+            float _scaleZ = _scale * (1 / transform.localScale.z);
+            _nodeX = _nodeX < 0 ? _nodeX += _scaleX : _nodeX -= _scaleX;
+            _nodeY = _nodeY < 0 ? _nodeY += _scaleY : _nodeY -= _scaleY;
+            _nodeZ = _nodeZ < 0 ? _nodeZ += _scaleZ : _nodeZ -= _scaleZ;
 
             float _xCheck = 0.5f;
             float _yCheck = 0.5f;
             float _zCheck = 0.5f;
+
+            bool _contains = visited.ContainsValue(_node);
 
             if (_nodeX < _xCheck && _nodeX > -_xCheck &&
                 _nodeZ < _yCheck && _nodeZ > -_yCheck &&
                 _nodeY < _zCheck && _nodeY > -_zCheck)
             {
                 _node.Enabled = false;
+                if (!_contains)
+                 visited.Add(_node.Id, _node);
             }
-            else
+            else if (_contains)
             {
                 _node.Enabled = true;
+                visited.Remove(_node.Id);
             }
-
-            /*Corners.Add(_upLeft);
-            Corners.Add(_upRight);
-            Corners.Add(_downRight);
-            Corners.Add(_downLeft);*/
         }
     }
 
@@ -73,6 +62,4 @@ public class PF_Obstacle : MonoBehaviour
     {
         UpdateNodes();
     }
-
-
 }

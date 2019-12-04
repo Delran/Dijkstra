@@ -38,12 +38,12 @@ public class TBG_DijkstraTest : MonoBehaviour
     {
         if (grid == null) return;
         var _nodes = grid._nodes;
-        for (int i = 0; i < _nodes.elements; i++)
+        for (int i = 0; i < _nodes.Count; i++)
         {
             DJ_Node _node = _nodes[i];
             var _neighbour = _node.Neighbours;
             Vector3 _position = _node.Position;
-            for (int j = 0; j < _neighbour.elements; j++)
+            for (int j = 0; j < _neighbour.Count; j++)
             {
                 Gizmos.color = Color.red;
                 Gizmos.DrawLine(_position, _neighbour[j].Position);

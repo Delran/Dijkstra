@@ -10,12 +10,12 @@ public class DJ_Node : MonoBehaviour
 
     public Vector3 Position { get; private set; } = Vector3.zero;
 
-    public TBG_StretchyBuffer<DJ_Node> Neighbours { get; private set; }
+    public List<DJ_Node> Neighbours { get; private set; }
 
     [SerializeField]
     public bool Enabled = true;
 
-    public void Init(Vector3 _pos, TBG_StretchyBuffer<DJ_Node> _neighbours, int _id)
+    public void Init(Vector3 _pos, List<DJ_Node> _neighbours, int _id)
     {
         Id = _id;
         name = $"Node {_id}";

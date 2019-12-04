@@ -20,7 +20,7 @@ public class DJ_PathFinding : MonoBehaviour
     DJ_Grid grid = null;
     public DJ_Grid Grid => grid;
 
-    TBG_StretchyBuffer<DJ_Node> path = null;
+    List<DJ_Node> path = null;
     DJ_Dijkstra dijkstra = null;
     // Start is called before the first frame update
     // Start is called before the first frame update
@@ -100,7 +100,7 @@ public class DJ_PathFinding : MonoBehaviour
     {
         if (grid == null) return;
         var _nodes = grid._nodes;
-        for (int i = 0; i < _nodes.elements; i++)
+        for (int i = 0; i < _nodes.Count; i++)
         {
             DJ_Node _node = _nodes[i];
             Vector3 _position = _node.Position;
@@ -119,7 +119,7 @@ public class DJ_PathFinding : MonoBehaviour
 
         if (path != null)
         {
-            for (int i = 1; i < path.elements; i++)
+            for (int i = 1; i < path.Count; i++)
             {
                 Gizmos.color = Color.green;
                 Gizmos.DrawLine(path[i - 1].Position, path[i].Position);

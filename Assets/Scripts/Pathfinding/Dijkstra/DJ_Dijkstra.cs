@@ -4,46 +4,36 @@ using UnityEngine;
 
 public class DJ_Dijkstra 
 {
-    TBG_StretchyBuffer<DJ_Node> vertices = null, path = new TBG_StretchyBuffer<DJ_Node>();
-    TBG_StretchyBuffer<int> deleted = new TBG_StretchyBuffer<int>();
+    List<DJ_Node> vertices = null, path = new List<DJ_Node>();
+    List<int> deleted = new List<int>();
 
     public Dictionary<int, float> distance = new Dictionary<int, float>();
     public Dictionary<int, DJ_Node> previous = new Dictionary<int, DJ_Node>();
     public Dictionary<int, DJ_Node> list = new Dictionary<int, DJ_Node>();
 
-    public TBG_StretchyBuffer<DJ_Node> Path => path;
+    public List<DJ_Node> Path => path;
 
-    public DJ_Dijkstra(TBG_StretchyBuffer<DJ_Node> _buffer)
-    {
-        vertices = _buffer;
-
-    }
-
-    public void ChangeMap(TBG_StretchyBuffer<DJ_Node> _buffer)
+    public DJ_Dijkstra(List<DJ_Node> _buffer)
     {
         vertices = _buffer;
     }
 
-    public void Reset()
+    public void ChangeMap(List<DJ_Node> _buffer)
     {
-        previous.Clear();
-        list.Clear();
-        distance.Clear();
-        deleted.Clear();
-        path.Clear();
+        vertices = _buffer;
     }
 
 
-    public TBG_StretchyBuffer<DJ_Node> GetPath(DJ_Node _target) => GetPath(_target.Id);
+    public List<DJ_Node> GetPath(DJ_Node _target) => GetPath(_target.Id);
 
-    public TBG_StretchyBuffer<DJ_Node> GetPath(int _target)
+    public List<DJ_Node> GetPath(int _target)
     {
         DJ_Node _pathNode = vertices[_target];
         if (!previous.ContainsKey(_pathNode.Id)) return null;
-        path = new TBG_StretchyBuffer<DJ_Node>();
+        path.Clear();
         while (_pathNode != null)
         {
-            path.PushFront(_pathNode);
+            path.Insert(0, _pathNode);
             _pathNode = previous[_pathNode.Id];
         }
         return path;
@@ -65,24 +55,17 @@ public class DJ_Dijkstra
                 _vertex = _id;
             }
         }
-        /*for (int i = 0; i < list.Count; i++)
-        {
-            int _nodeDist = distance[i];
-            if (_nodeDist < _min)
-            {
-                _min = _nodeDist;
-                //Debug.Log("BONJOUR");
-                _vertex = i;
-            }
-        }*/
         return _vertex;
     }
 
     public void Compute(int _id, int _target = -1)
     {
-        Reset();
+        previous.Clear();
+        list.Clear();
+        distance.Clear();
+        deleted.Clear();
 
-        for (int i = 0; i < vertices.elements; i++)
+        for (int i = 0; i < vertices.Count; i++)
         {
             DJ_Node _node = vertices[i];
             if (_node.Enabled)
@@ -107,16 +90,14 @@ public class DJ_Dijkstra
 
             list.Remove(_vertex);
 
-            deleted.Add(_vertex);
-
             DJ_Node _node = vertices[_vertex];
 
-            TBG_StretchyBuffer<DJ_Node> _neighbours = _node.Neighbours;
-            for (int i = 0; i < _neighbours.elements; i++)
+            List<DJ_Node> _neighbours = _node.Neighbours;
+            for (int i = 0; i < _neighbours.Count; i++)
             {
                 DJ_Node _neighbour = _neighbours[i];
                 int _neightbourId = _neighbour.Id;
-                if (list.ContainsKey(_neighbour.Id))
+                if (list.ContainsKey(_neightbourId))
                 {
                     float _weight = distance[_vertex] + Vector3.Distance(_node.Position, _neighbour.Position); //DISTANCE TO NEIGHBOUR SHOULD BE MODIFIED WHEN WORKING
                     if (_weight < distance[_neightbourId] )
